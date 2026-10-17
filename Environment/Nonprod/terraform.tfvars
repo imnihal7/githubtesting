@@ -5,6 +5,7 @@ instance_type = "t3.micro"
 
 key_name = "my-key"
 
+
 root_volume_size = 20
 
 ingress_rules = [
