@@ -14,12 +14,6 @@ ingress_rules = [
     port        = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-  },
-  {
-    description = "SSH"
-    port        = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
   }
 ]
 

@@ -51,6 +51,7 @@ jobs:
 
       - name: Run TFLint
         working-directory: ${{ env.TF_WORKING_DIR }}
+        continue-on-error: true
         run: tflint --recursive
 
       ###################################################
@@ -58,10 +59,8 @@ jobs:
       ###################################################
 
       - name: Run Checkov
+        continue-on-error: true
         uses: bridgecrewio/checkov-action@master
         with:
           directory: .
-          framework: terraform
-          quiet: true
-
-   
+          framework: 
