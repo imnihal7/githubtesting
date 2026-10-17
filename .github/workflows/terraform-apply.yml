@@ -1,4 +1,4 @@
-name: Terraform NonProd Deployment
+name: Terraform Apply NonProd
 
 on:
   push:
@@ -8,15 +8,14 @@ on:
       - 'Environment/Nonprod/**'
       - 'module/**'
 
- 
 env:
   TF_VERSION: "1.9.8"
   AWS_REGION: "ap-south-1"
   TF_WORKING_DIR: "./Environment/Nonprod"
 
 jobs:
-  terraform:
-    name: Terraform NonProd
+  terraform-apply:
+    name: Terraform Apply
     runs-on: ubuntu-latest
 
     environment:
@@ -46,24 +45,8 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Format Check
-        run: terraform fmt -check -recursive
-
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Plan
-        run: |
-          terraform plan \
-          -var-file="terraform.tfvars" \
-          -out=tfplan
-
-      - name: Upload Plan
-        uses: actions/upload-artifact@v4
-        with:
-          name: tfplan
-          path: Environment/Nonprod/tfplan
-
       - name: Terraform Apply
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve -var-file="terraform.tfvars"

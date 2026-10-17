@@ -14,18 +14,6 @@ ingress_rules = [
     port        = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-  },
-  {
-    description = "HTTP"
-    port        = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  },
-  {
-    description = "HTTPS"
-    port        = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
   }
 ]
 
