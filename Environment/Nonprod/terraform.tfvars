@@ -12,7 +12,7 @@ ingress_rules = [
     description = "SSH"
     port        = 22
     protocol    = "tcp"
-    cidr_blocks = ["YOUR_PUBLIC_IP/32"]
+    cidr_blocks = ["0.0.0.0/0"]
   },
   {
     description = "HTTP"

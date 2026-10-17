@@ -1,8 +1,7 @@
 resource "aws_security_group" "this" {
   name        = "${var.instance_name}-sg"
   description = "EC2 Security Group"
-  vpc_id      = var.vpc_id
-
+ 
   dynamic "ingress" {
     for_each = var.ingress_rules
 
