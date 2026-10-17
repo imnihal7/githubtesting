@@ -1,4 +1,4 @@
-name: Terraform CI/CD
+name: Terraform NonProd
 
 on:
   push:
@@ -7,16 +7,18 @@ on:
     paths:
       - 'Nonprod/**'
 
+
+
 env:
   AWS_REGION: ap-south-1
 
 jobs:
   terraform:
-    name: Terraform Workflow
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
+    defaults:
+      run:
+        working-directory: ./Nonprod
 
     steps:
       - name: Checkout Code
@@ -37,7 +39,7 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Format Check
+      - name: Terraform Fmt
         run: terraform fmt -check -recursive
 
       - name: Terraform Validate
@@ -45,12 +47,6 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-
-      - name: Upload Plan Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-plan
-          path: tfplan
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
