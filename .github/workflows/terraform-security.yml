@@ -1,0 +1,66 @@
+name: Terraform Security Scan
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'Environment/Nonprod/**'
+      - 'module/**'
+
+env:
+  TF_WORKING_DIR: "./Environment/Nonprod"
+
+jobs:
+  security-scan:
+    name: Security & Quality Checks
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      ###################################################
+      # Terraform Setup
+      ###################################################
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      ###################################################
+      # Terraform Init
+      ###################################################
+
+      - name: Terraform Init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init -backend=false
+
+      ###################################################
+      # TFLint
+      ###################################################
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+
+      - name: Initialize TFLint
+        run: tflint --init
+
+      - name: Run TFLint
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        continue-on-error: true
+        run: tflint --recursive
+
+      ###################################################
+      # Checkov
+      ###################################################
+
+      - name: Run Checkov
+        continue-on-error: true
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .
+          framework: 
