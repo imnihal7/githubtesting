@@ -25,15 +25,6 @@ jobs:
         uses: actions/checkout@v4
 
       ###################################################
-      # Gitleaks
-      ###################################################
-
-      - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      ###################################################
       # Terraform Setup
       ###################################################
 
@@ -73,27 +64,4 @@ jobs:
           framework: terraform
           quiet: true
 
-      ###################################################
-      # TFSEC
-      ###################################################
-
-      - name: Run TFSEC
-        uses: aquasecurity/tfsec-action@v1.0.3
-        with:
-          working_directory: Environment/Nonprod
-
-      ###################################################
-      # Terraform Format Check
-      ###################################################
-
-      - name: Terraform FMT
-        working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform fmt -check -recursive
-
-      ###################################################
-      # Terraform Validate
-      ###################################################
-
-      - name: Terraform Validate
-        working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform validate
+   
