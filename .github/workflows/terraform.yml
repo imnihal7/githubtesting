@@ -1,33 +1,40 @@
-name: Terraform NonProd
+name: Terraform NonProd Deployment
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'Nonprod/**'
+      - 'Environment/Nonprod/**'
+      - 'module/**'
 
-
-
+ 
 env:
-  AWS_REGION: ap-south-1
+  TF_VERSION: "1.9.8"
+  AWS_REGION: "ap-south-1"
+  TF_WORKING_DIR: "./Environment/Nonprod"
 
 jobs:
   terraform:
+    name: Terraform NonProd
     runs-on: ubuntu-latest
+
+    environment:
+      name: nonprod
 
     defaults:
       run:
-        working-directory: ./Nonprod
+        shell: bash
+        working-directory: ${{ env.TF_WORKING_DIR }}
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.9.8
+          terraform_version: ${{ env.TF_VERSION }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -39,15 +46,24 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Fmt
+      - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
       - name: Terraform Validate
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
+        run: |
+          terraform plan \
+          -var-file="terraform.tfvars" \
+          -out=tfplan
+
+      - name: Upload Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: Environment/Nonprod/tfplan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve tfplan
