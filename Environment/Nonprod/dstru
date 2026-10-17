@@ -1,0 +1,18 @@
+-project
+--Prod
+--DR
+--Non Prod
+            ├── main.tf
+            ├── variables.tf
+            └── outputs.tf
+            |__ provider.tf
+            |__ terraform.tfvars            
+   
+
+
+--modules/
+        └── ec2/
+            ├── main.tf
+            ├── variables.tf
+            └── outputs.tf
+``
