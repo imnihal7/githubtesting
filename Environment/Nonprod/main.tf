@@ -1,7 +1,7 @@
 
 
 module "ec2" {
-  source = "./modules/ec2"
+  source = "./module/ec2"
 
   instance_name = var.instance_name
   ami_id        = var.ami_id
